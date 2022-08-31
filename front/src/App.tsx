@@ -6,7 +6,7 @@ import MessagesThread from "./components/messagesThread"
 function App() {
   return (
     <div>
-      <Title>Simple chat message</Title>
+      <Title>Faberchat</Title>
       <MessagesThread/>
       <TextField/>
     </div>

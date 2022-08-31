@@ -15,7 +15,7 @@ function Message(props: MessageProps) {
       />
       <h3 className="msg-username">{props.children.username}</h3>
       <p className="msg-content">{props.children.content}</p>
-      <p className="msg-date">{props.children.date.toDateString()}</p>
+      <p className="msg-date">{new Date(props.children.date).toDateString()}</p>
     </div>
   )
 }

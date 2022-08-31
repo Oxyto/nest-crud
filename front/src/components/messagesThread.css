@@ -1,5 +1,9 @@
 .msg-thead {
+  margin-left: 20%;
+  margin-right: 20%;
   background-color: white;
   border: 1px solid black;
   border-radius: 1em;
+  background-image: url("https://static.vecteezy.com/system/resources/previews/004/911/032/original/illustration-of-love-and-valentine-day-with-paper-heart-balloon-and-gift-box-float-on-the-blue-sky-can-be-used-for-wallpaper-flyers-invitation-posters-banners-paper-cut-style-free-vector.jpg");
+  background-attachment: fixed;
 }
