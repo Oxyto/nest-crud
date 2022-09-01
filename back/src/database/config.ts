@@ -21,10 +21,12 @@ const db = knex({
   },
 })
 
-db.schema.createTable("messages", (table) => {
-  table.string("username").notNullable()
-  table.string("content").notNullable()
-  table.date("date").notNullable()
-}).then()
+db.schema
+  .createTable("messages", (table) => {
+    table.string("username").notNullable()
+    table.string("content").notNullable()
+    table.date("date").notNullable()
+  })
+  .then()
 
 export default db

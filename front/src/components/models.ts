@@ -1,5 +1,8 @@
-export interface MessageModel {
+export interface MessageModelRequest {
   username: string
   content: string
-  date: string
+}
+
+export interface MessageModel extends MessageModelRequest {
+  date: string | Date
 }

@@ -1,5 +1,21 @@
 import { useState } from "react"
+import { MessageModelRequest } from "./models"
+import serverConfig from "./config"
 import "./textField.css"
+
+async function sendMessage(message: MessageModelRequest) {
+  await fetch(
+    `http://${serverConfig.host}:${serverConfig.port}${serverConfig.path}`,
+    {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    },
+  )
+}
 
 function TextField() {
   const [msg, setMsg] = useState("")
@@ -10,16 +26,41 @@ function TextField() {
       <input
         value={name}
         onChange={(event) => setName(event.target.value)}
-        onKeyDown={(event) => event.key === "Enter" && name && setMsg("")}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && name) {
+            setMsg("")
+            sendMessage({
+              username: name,
+              content: msg,
+            })
+          }
+        }}
         placeholder="Username"
       />
       <input
         value={msg}
         onChange={(event) => setMsg(event.target.value)}
-        onKeyDown={(event) => event.key === "Enter" && name && setMsg("")}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && name) {
+            setMsg("")
+            sendMessage({
+              username: name,
+              content: msg,
+            })
+          }
+        }}
         placeholder="Message..."
       />
-      <button onClick={() => name && setMsg("")}>Send</button>
+      <button
+        onClick={() => {
+          if (name) {
+            setMsg("")
+            sendMessage({ username: name, content: msg })
+          }
+        }}
+      >
+        Send
+      </button>
     </div>
   )
 }

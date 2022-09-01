@@ -7,6 +7,7 @@ import db from "../database/config"
 export class MessagesService {
   async create(createMessageDto: CreateMessageDto) {
     const message = new Message(createMessageDto, new Date())
+
     if (!message.check())
       throw new HttpException("Bad Request", HttpStatus.BAD_REQUEST)
     await db.insert(message).into("messages")

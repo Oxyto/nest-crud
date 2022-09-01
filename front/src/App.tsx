@@ -7,8 +7,8 @@ function App() {
   return (
     <div>
       <Title>Faberchat</Title>
-      <MessagesThread/>
-      <TextField/>
+      <MessagesThread />
+      <TextField />
     </div>
   )
 }
