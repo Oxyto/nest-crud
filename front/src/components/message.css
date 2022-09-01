@@ -6,7 +6,7 @@
   border: 1px solid black;
   border-radius: 1em;
   box-shadow: 1px 1px 1px grey;
-  margin: 1em;
+  margin: 0.5em;
   transition: transform 0.2s;
 }
 

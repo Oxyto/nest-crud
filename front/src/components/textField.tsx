@@ -17,6 +17,7 @@ async function sendMessage(message: MessageModelRequest) {
   )
 }
 
+
 function TextField() {
   const [msg, setMsg] = useState("")
   const [name, setName] = useState("Anonymous")
@@ -27,7 +28,7 @@ function TextField() {
         value={name}
         onChange={(event) => setName(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key === "Enter" && name) {
+          if (event.key === "Enter" && name && msg) {
             setMsg("")
             sendMessage({
               username: name,
@@ -41,7 +42,7 @@ function TextField() {
         value={msg}
         onChange={(event) => setMsg(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key === "Enter" && name) {
+          if (event.key === "Enter" && name && msg) {
             setMsg("")
             sendMessage({
               username: name,
@@ -53,7 +54,7 @@ function TextField() {
       />
       <button
         onClick={() => {
-          if (name) {
+          if (name && msg) {
             setMsg("")
             sendMessage({ username: name, content: msg })
           }

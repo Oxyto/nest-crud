@@ -23,6 +23,7 @@ const db = knex({
 
 db.schema
   .createTable("messages", (table) => {
+    table.index("id").increments()
     table.string("username").notNullable()
     table.string("content").notNullable()
     table.date("date").notNullable()

@@ -14,6 +14,11 @@ export class MessagesService {
   }
 
   async findAll() {
-    return await db.select("*").from("messages")
+    const msg_list = await db
+      .select("*")
+      .from("messages")
+      .orderBy("id", "desc")
+      .limit(5)
+    return msg_list.reverse()
   }
 }

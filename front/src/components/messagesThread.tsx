@@ -23,6 +23,7 @@ function MessagesThread() {
   }, [])
   return (
     <div className="msg-thead">
+      <p>{messages.length ? "" : "Loading messages..."}</p>
       {messages.map((msg) => (
         <Message key={msg.date as string}>{msg}</Message>
       ))}
