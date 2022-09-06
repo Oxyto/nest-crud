@@ -1,7 +1,12 @@
+import { io } from "socket.io-client"
+
 const serverConfig = {
   host: "localhost",
   port: "8080",
-  path: "/messages",
 }
 
-export default serverConfig
+const socket = io(
+  `ws://${serverConfig.host}:${serverConfig.port}`,
+)
+
+export default socket

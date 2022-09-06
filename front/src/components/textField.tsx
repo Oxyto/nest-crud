@@ -1,22 +1,11 @@
 import { useState } from "react"
 import { MessageModelRequest } from "./models"
-import serverConfig from "./config"
+import socket from "./config"
 import "./textField.css"
 
-async function sendMessage(message: MessageModelRequest) {
-  await fetch(
-    `http://${serverConfig.host}:${serverConfig.port}${serverConfig.path}`,
-    {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    },
-  )
+function sendMessage(message: MessageModelRequest) {
+  socket.send("message", message)
 }
-
 
 function TextField() {
   const [msg, setMsg] = useState("")

@@ -1,4 +1,4 @@
-import { CreateMessageDto } from "../dto/create-message.dto"
+import { CreateMessageDto } from "./create-message.dto"
 
 export class Message {
   username: string

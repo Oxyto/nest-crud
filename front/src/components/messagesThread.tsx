@@ -2,25 +2,15 @@ import "./messagesThread.css"
 import Message from "./message"
 import { useEffect, useState } from "react"
 import { MessageModel } from "./models"
-import serverConfig from "./config"
+import socket from "./config"
 
 function MessagesThread() {
   const [messages, setMessages] = useState([] as MessageModel[])
 
-  async function getMessages() {
-    const res = await fetch(
-      `http://${serverConfig.host}:${serverConfig.port}${serverConfig.path}`,
-      {
-        mode: "cors",
-      },
-    )
-    const msg_list = await res.json()
-
-    setMessages(msg_list)
-  }
   useEffect(() => {
-    setInterval(() => getMessages().catch(console.error), 1000)
-  }, [])
+    socket.on("messages", (data) => setMessages(data))
+    socket.on("message", (data) => setMessages([...messages, data]))
+  }, [messages])
   return (
     <div className="msg-thead">
       <p>{messages.length ? "" : "Loading messages..."}</p>
