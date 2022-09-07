@@ -12,8 +12,6 @@ export class Message {
   }
 
   check() {
-    if (typeof this.username != "string" || typeof this.content != "string")
-      return false
-    return true
+    return typeof this.username === "string" && typeof this.content === "string"
   }
 }

@@ -1,0 +1,30 @@
+version: "3"
+services:
+  front:
+    restart: "on-failure"
+    build: "./front"
+    image: "nginx"
+    ports:
+      - "80:80"
+    depends_on:
+      - "back"
+    links:
+      - "back"
+  back:
+    build: "."
+    image: "node-server"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "db"
+    links:
+      - "db:database"
+  db:
+    restart: "on-failure"
+    image: "postgres"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "public"
+    expose:
+      - 5432

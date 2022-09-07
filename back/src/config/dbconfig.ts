@@ -6,10 +6,11 @@ const db = knex({
     filename: ":memory:",
   },
   migrations: {
+    directory: "dest/migrations",
     loadExtensions: [".js"],
   },
 })
 
-db.migrate.latest({ directory: "dest/migrations" })
+db.migrate.latest()
 
 export default db

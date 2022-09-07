@@ -5,22 +5,19 @@ import {
   WebSocketServer,
   WsResponse,
 } from "@nestjs/websockets"
-import { Message } from "../message/message.entity"
-import db from "../config/dbconfig"
+import { Message } from "./message/message.entity"
+import db from "./config/dbconfig"
 
 @WebSocketGateway({ cors: true })
 export class SocketsGateway implements OnGatewayConnection {
-  @WebSocketServer() server: any
+  @WebSocketServer() broadcast: any
 
   private async getMessagesList() {
-    return await db
-      .select("*")
-      .from("messages")
-      .orderBy("id", "asc")
+    return await db.select("*").from("messages").orderBy("id", "asc")
   }
 
-  async handleConnection(client: any, ..._args: any[]) {
-    client.emit("messages", await this.getMessagesList())
+  async handleConnection(clientConnection: any, ..._args: any[]) {
+    clientConnection.emit("messages", await this.getMessagesList())
   }
 
   @SubscribeMessage("message")
@@ -33,6 +30,6 @@ export class SocketsGateway implements OnGatewayConnection {
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
     await db.insert(message).into("messages")
-    this.server.emit("message", message)
+    this.broadcast.emit("message", message)
   }
 }
