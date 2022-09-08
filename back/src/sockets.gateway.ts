@@ -6,11 +6,24 @@ import {
   WsResponse,
 } from "@nestjs/websockets"
 import { Message } from "./message/message.entity"
-import db from "./config/dbconfig"
+import { db, cache } from "./config/dbconfig"
 
 @WebSocketGateway({ cors: true })
 export class SocketsGateway implements OnGatewayConnection {
   @WebSocketServer() broadcast: any
+
+  private async handleQueue(): Promise<void> {
+    const lastMessages: string[] = await cache.lRange("msgQueue", 0, -1)
+
+    try {
+      await db
+        .insert(lastMessages.map((msg) => JSON.parse(msg)))
+        .into("messages")
+      await cache.del("msgQueue")
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   private async getMessagesList() {
     return await db.select("*").from("messages").orderBy("id", "asc")
@@ -21,15 +34,13 @@ export class SocketsGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage("message")
-  async handleMessage(
-    _client: any,
-    payload: any,
-  ): Promise<WsResponse<Message | string>> {
+  async handleMessage(_client: any, payload: any): Promise<WsResponse<string>> {
     const message = new Message(payload[1], new Date())
 
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
-    await db.insert(message).into("messages")
+    await cache.lPush("msgQueue", JSON.stringify(message))
+    await this.handleQueue()
     this.broadcast.emit("message", message)
   }
 }

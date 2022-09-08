@@ -12,6 +12,11 @@ export class Message {
   }
 
   check() {
-    return typeof this.username === "string" && typeof this.content === "string"
+    return (
+      typeof this.username === "string" &&
+      typeof this.content === "string" &&
+      this.username.length <= 64 &&
+      this.content.length <= 512
+    )
   }
 }

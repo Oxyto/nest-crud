@@ -1,0 +1,6 @@
+Dockerfile
+node_modules
+nest-cli.json
+package-lock.json
+tsconfig.build.tsbuildinfo
+.env.local

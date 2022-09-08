@@ -2,5 +2,8 @@
 node_modules
 dest
 build
-*.tsbuildinfo
+tsconfig.build.tsbuildinfo
+package-lock.json
+nest-cli.json
 .env
+dump.rdb
