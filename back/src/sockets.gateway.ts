@@ -16,20 +16,23 @@ export class SocketsGateway implements OnGatewayConnection {
     const msgQueue: string[] = await cache.lRange("msgQueue", 0, -1)
 
     try {
-      console.log("[*] Saving to db")
       await cache.del("msgQueue")
       await db
         .insert(msgQueue.map((msg) => JSON.parse(msg)))
         .into("messages")
-      console.log("[*] Saved to db")
     } catch (error) {
       console.error(error)
       await cache.rPush("msgQueue", msgQueue)
     }
   }
 
-  private async getMessagesList() {
-    return await db.select("*").from("messages").orderBy("id", "asc")
+  private async getMessagesList(): Promise<Message[]> {
+    try {
+      return await db.select("*").from("messages").orderBy("id", "asc")
+    } catch (error) {
+      console.error(error)
+      return []
+    }
   }
 
   async handleConnection(clientConnection: any, ..._args: any[]) {

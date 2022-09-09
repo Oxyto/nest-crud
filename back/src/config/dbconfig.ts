@@ -25,4 +25,5 @@ export const cache = redis.createClient({
 })
 
 cache.connect().then()
+
 db.migrate.latest()
