@@ -13,15 +13,18 @@ export class SocketsGateway implements OnGatewayConnection {
   @WebSocketServer() broadcast: any
 
   private async handleQueue(): Promise<void> {
-    const lastMessages: string[] = await cache.lRange("msgQueue", 0, -1)
+    const msgQueue: string[] = await cache.lRange("msgQueue", 0, -1)
 
     try {
-      await db
-        .insert(lastMessages.map((msg) => JSON.parse(msg)))
-        .into("messages")
+      console.log("[*] Saving to db")
       await cache.del("msgQueue")
+      await db
+        .insert(msgQueue.map((msg) => JSON.parse(msg)))
+        .into("messages")
+      console.log("[*] Saved to db")
     } catch (error) {
       console.error(error)
+      await cache.rPush("msgQueue", msgQueue)
     }
   }
 
@@ -39,8 +42,8 @@ export class SocketsGateway implements OnGatewayConnection {
 
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
-    await cache.lPush("msgQueue", JSON.stringify(message))
-    await this.handleQueue()
+    await cache.rPush("msgQueue", JSON.stringify(message))
     this.broadcast.emit("message", message)
+    await this.handleQueue()
   }
 }
