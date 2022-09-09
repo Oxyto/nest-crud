@@ -12,20 +12,6 @@ import { db, cache } from "./config/dbconfig"
 export class SocketsGateway implements OnGatewayConnection {
   @WebSocketServer() broadcast: any
 
-  private async handleQueue(): Promise<void> {
-    const msgQueue: string[] = await cache.lRange("msgQueue", 0, -1)
-
-    try {
-      await cache.del("msgQueue")
-      await db
-        .insert(msgQueue.map((msg) => JSON.parse(msg)))
-        .into("messages")
-    } catch (error) {
-      console.error(error)
-      await cache.rPush("msgQueue", msgQueue)
-    }
-  }
-
   private async getMessagesList(): Promise<Message[]> {
     try {
       return await db.select("*").from("messages").orderBy("id", "asc")
@@ -47,6 +33,5 @@ export class SocketsGateway implements OnGatewayConnection {
       return { event: "error", data: "Invalid message body" }
     await cache.rPush("msgQueue", JSON.stringify(message))
     this.broadcast.emit("message", message)
-    await this.handleQueue()
   }
 }

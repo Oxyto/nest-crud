@@ -24,6 +24,25 @@ export const cache = redis.createClient({
   }`,
 })
 
-cache.connect().then()
+async function handleQueue(): Promise<void> {
+  const msgQueue: string[] = await cache.lRange("msgQueue", 0, -1)
 
+  if (msgQueue.length === 0)
+    return
+  try {
+    console.log("[*] Flushing queue")
+    await cache.del("msgQueue")
+    await db
+      .insert(msgQueue.map?.((msg) => JSON.parse(msg)))
+      .into("messages")
+    console.log("[*] Sucessfully flushed queue")
+  } catch (error) {
+    console.error(error)
+    await cache.rPush("msgQueue", msgQueue)
+    console.log("[*] Failed to flush queue")
+  }
+}
+
+cache.connect().then()
 db.migrate.latest()
+setInterval(handleQueue, 1000)
