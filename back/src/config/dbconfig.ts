@@ -29,17 +29,14 @@ async function handleQueue(): Promise<void> {
 
   if (msgQueue.length === 0)
     return
+  await cache.del("msgQueue")
   try {
-    console.log("[*] Flushing queue")
-    await cache.del("msgQueue")
     await db
       .insert(msgQueue.map?.((msg) => JSON.parse(msg)))
       .into("messages")
-    console.log("[*] Sucessfully flushed queue")
   } catch (error) {
     console.error(error)
     await cache.rPush("msgQueue", msgQueue)
-    console.log("[*] Failed to flush queue")
   }
 }
 
