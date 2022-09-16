@@ -1,4 +1,5 @@
 export interface MessageModelRequest {
+  picture: string
   username: string
   content: string
 }

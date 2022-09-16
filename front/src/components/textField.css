@@ -20,22 +20,3 @@
   outline: none;
   background-color: white;
 }
-
-.text-field button {
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  background-color: lightgray;
-  margin-left: 0.5em;
-  padding: 0.5em;
-  border: none;
-  border-radius: 1em;
-  transition: transform 0.3s;
-}
-
-.text-field button:hover {
-  transform: scale(105%);
-}
-
-.text-field button:active {
-  background-color: white;
-}

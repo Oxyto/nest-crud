@@ -2,6 +2,7 @@ import { useState } from "react"
 import { MessageModelRequest } from "./models"
 import socket from "./config"
 import "./textField.css"
+import { decodeTokenCredentials } from "../utils"
 
 function sendMessage(message: MessageModelRequest) {
   socket.send("message", message)
@@ -9,43 +10,31 @@ function sendMessage(message: MessageModelRequest) {
 
 function TextField() {
   const [msg, setMsg] = useState("")
-  const [name, setName] = useState("Anonymous")
+  const credentials = decodeTokenCredentials()
+  const message = {
+    picture: credentials.picture,
+    username: credentials.name,
+    content: msg,
+  }
 
   return (
     <div className="text-field">
       <input
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && name && msg) {
-            setMsg("")
-            sendMessage({
-              username: name,
-              content: msg,
-            })
-          }
-        }}
-        placeholder="Username"
-      />
-      <input
         value={msg}
         onChange={(event) => setMsg(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key === "Enter" && name && msg) {
+          if (event.key === "Enter" && msg) {
             setMsg("")
-            sendMessage({
-              username: name,
-              content: msg,
-            })
+            sendMessage(message)
           }
         }}
         placeholder="Message..."
       />
       <button
         onClick={() => {
-          if (name && msg) {
+          if (msg) {
             setMsg("")
-            sendMessage({ username: name, content: msg })
+            sendMessage(message)
           }
         }}
       >

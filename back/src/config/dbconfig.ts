@@ -27,13 +27,10 @@ export const cache = redis.createClient({
 async function handleQueue(): Promise<void> {
   const msgQueue: string[] = await cache.lRange("msgQueue", 0, -1)
 
-  if (msgQueue.length === 0)
-    return
+  if (msgQueue.length === 0) return
   await cache.del("msgQueue")
   try {
-    await db
-      .insert(msgQueue.map?.((msg) => JSON.parse(msg)))
-      .into("messages")
+    await db.insert(msgQueue.map?.((msg) => JSON.parse(msg))).into("messages")
   } catch (error) {
     console.error(error)
     await cache.rPush("msgQueue", msgQueue)

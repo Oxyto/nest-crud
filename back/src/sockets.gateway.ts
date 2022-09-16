@@ -7,7 +7,10 @@ import {
 } from "@nestjs/websockets"
 import { Message } from "./message/message.entity"
 import { db, cache } from "./config/dbconfig"
+import { UseGuards } from "@nestjs/common"
+import { AuthGuard } from "./auth.guard"
 
+@UseGuards(AuthGuard)
 @WebSocketGateway({ cors: true })
 export class SocketsGateway implements OnGatewayConnection {
   @WebSocketServer() broadcast: any
