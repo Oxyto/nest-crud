@@ -1,4 +1,9 @@
 !.gitignore
-
 node_modules
 dest
+build
+tsconfig.build.tsbuildinfo
+package-lock.json
+nest-cli.json
+.env
+dump.rdb

@@ -1,0 +1,36 @@
+@import "../palette.css";
+
+.msg {
+  background-color: var(--message-background-color);
+  text-indent: 1em;
+  border: 1px solid black;
+  border-radius: 1em;
+  box-shadow: 1px 1px 1px grey;
+  margin: 0.5em;
+  transition: transform 0.2s;
+}
+
+.msg:hover {
+  transform: scale(101%);
+}
+
+.msg-icon {
+  user-select: none;
+  padding-top: 1em;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s;
+}
+
+.msg-icon:hover {
+  transform: scale(125%);
+}
+
+.msg-username {
+  margin-top: -1.5em;
+  margin-left: 2.5em;
+}
+
+.msg-date {
+  font-size: 10px;
+}

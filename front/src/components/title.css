@@ -1,0 +1,17 @@
+@keyframes title-animate {
+  0% {
+    top: 0.5em;
+  }
+  100% {
+    top: 0em;
+  }
+}
+
+.title {
+  user-select: none;
+  position: relative;
+  text-align: center;
+  color: white;
+  animation-name: title-animate;
+  animation-duration: 2s;
+}

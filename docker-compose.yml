@@ -1,0 +1,37 @@
+version: "3"
+services:
+  front:
+    restart: "on-failure"
+    build: "./front"
+    image: "front"
+    ports:
+      - "80:80"
+    depends_on:
+      - "back"
+    links:
+      - "back"
+  back:
+    build: "./back"
+    image: "back"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "db"
+      - "cache"
+    links:
+      - "db:database"
+      - "cache:cache"
+  db:
+    restart: "on-failure"
+    image: "postgres"
+    environment:
+      POSTGRES_USER: "${DB_USER:-postgres}"
+      POSTGRES_PASSWORD: "${DB_PASSWD:-password}"
+      POSTGRES_DB: "${DB_DATABASE:-public}"
+    expose:
+      - 5432
+  cache:
+    restart: "on-failure"
+    image: "redis"
+    expose:
+      - 6379

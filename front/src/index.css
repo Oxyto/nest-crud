@@ -1,9 +1,8 @@
+@import "./palette.css";
+
 body {
+  background-color: var(--background-color);
   font-family: Comfortaa;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: Menlo;
 }

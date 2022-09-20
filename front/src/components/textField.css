@@ -1,0 +1,22 @@
+.text-field {
+  text-align: center;
+  padding-top: 1em;
+  --font-family: Verdana, Geneva, Tahoma, sans-serif;
+  --font-size: 1em;
+}
+
+.text-field input {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  padding: 0.5em;
+  border: none;
+  border-radius: 0.5em;
+}
+
+.text-field input:focus {
+  border: none;
+  outline: none;
+  background-color: white;
+}
