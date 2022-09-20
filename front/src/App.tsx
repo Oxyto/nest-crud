@@ -14,7 +14,6 @@ function App() {
           <p>You need to be logged in beforehand</p>
           <GoogleLogin
             onSuccess={(res) => {
-              console.log(res)
               window.localStorage.setItem("token", res.credential as string)
               window.location.reload()
             }}
