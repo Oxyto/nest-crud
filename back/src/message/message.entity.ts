@@ -1,5 +1,8 @@
 import { CreateMessageDto } from "./create-message.dto"
 
+const USERNAME_LENGTH = 64
+const CONTENT_LENGTH = 512
+
 export class Message {
   picture: string
   username: string
@@ -18,8 +21,8 @@ export class Message {
       typeof this.picture === "string" &&
       typeof this.username === "string" &&
       typeof this.content === "string" &&
-      this.username.length <= 64 &&
-      this.content.length <= 512
+      this.username.length <= USERNAME_LENGTH &&
+      this.content.length <= CONTENT_LENGTH
     )
   }
 }

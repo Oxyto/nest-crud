@@ -4,6 +4,8 @@ import * as dotenv from "dotenv"
 
 dotenv.config()
 
+const SAVE_INTERVAL_MS = 1000
+
 export const db = knex({
   client: "pg",
   connection: {
@@ -39,4 +41,4 @@ async function handleQueue(): Promise<void> {
 
 cache.connect().then()
 db.migrate.latest()
-setInterval(handleQueue, 1000)
+setInterval(handleQueue, SAVE_INTERVAL_MS)
