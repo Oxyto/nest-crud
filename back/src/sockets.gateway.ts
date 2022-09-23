@@ -17,19 +17,25 @@ export class SocketsGateway implements OnGatewayConnection {
 
   private async getMessagesList(): Promise<Message[]> {
     try {
-      return await db.select("*").from("messages").orderBy("id", "asc")
+      return await db.select("*").from("messages").orderBy("uuid", "asc")
     } catch (error) {
       console.error(error)
       return []
     }
   }
 
-  async handleConnection(clientConnection: any, ..._args: any[]) {
+  async handleConnection(clientConnection: any, ..._args: unknown[]) {
     clientConnection.emit("messages", await this.getMessagesList())
   }
 
+  @SubscribeMessage("vu")
+  async handleVu(_client: unknown, payload: unknown) {}
+
   @SubscribeMessage("message")
-  async handleMessage(_client: any, payload: any): Promise<WsResponse<string>> {
+  async handleMessage(
+    _client: unknown,
+    payload: unknown,
+  ): Promise<WsResponse<string>> {
     const message = new Message(payload[1], new Date())
 
     if (!message.check())

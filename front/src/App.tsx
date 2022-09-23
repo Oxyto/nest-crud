@@ -1,7 +1,7 @@
 import "./App.css"
-import Title from "./components/title"
-import TextField from "./components/textField"
-import MessagesThread from "./components/messagesThread"
+import { Title } from "./components/title"
+import { TextField } from "./components/textField"
+import { MessagesThread } from "./components/messagesThread"
 import { decodeTokenCredentials } from "./utils"
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
 
@@ -23,12 +23,12 @@ function App() {
     )
   return (
     <div>
-      <p id="user_name">Connected as {decodeTokenCredentials().name}</p>
+      <p id="username">Connected as {decodeTokenCredentials().name}</p>
       <Title>Faberchat</Title>
       <MessagesThread />
       <TextField />
       <button
-        className="logout_btn"
+        className="logout-btn"
         onClick={() => {
           localStorage.removeItem("token")
           window.location.reload()

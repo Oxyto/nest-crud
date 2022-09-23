@@ -1,11 +1,11 @@
 import "./messagesThread.css"
-import Message from "./message"
+import { Message } from "./message"
 import { useEffect, useState } from "react"
 import { MessageModel } from "./models"
 import socket from "./config"
 
-function MessagesThread() {
-  const [messages, setMessages] = useState([] as MessageModel[])
+export function MessagesThread() {
+  const [messages, setMessages] = useState<MessageModel[]>([])
 
   useEffect(() => {
     socket.on("messages", (data) => setMessages(data))
@@ -13,12 +13,11 @@ function MessagesThread() {
   }, [messages])
   return (
     <div className="msg-thead">
-      <p>{messages.length ? "" : "Loading messages..."}</p>
-      {messages.map((msg) => (
-        <Message key={msg.date as string}>{msg}</Message>
-      ))}
+      {messages.length === 0 ? (
+        <p>Loading messages...</p>
+      ) : (
+        messages.map((msg) => <Message key={msg.date}>{msg}</Message>)
+      )}
     </div>
   )
 }
-
-export default MessagesThread

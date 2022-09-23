@@ -3,15 +3,17 @@ import { MessageModelRequest } from "./models"
 import socket from "./config"
 import "./textField.css"
 import { decodeTokenCredentials } from "../utils"
+import { v4 } from "uuid"
 
 function sendMessage(message: MessageModelRequest) {
   socket.send("message", message)
 }
 
-function TextField() {
+export function TextField() {
   const [msg, setMsg] = useState("")
   const credentials = decodeTokenCredentials()
   const message = {
+    uuid: v4(),
     picture: credentials.picture,
     username: credentials.name,
     content: msg,
@@ -43,5 +45,3 @@ function TextField() {
     </div>
   )
 }
-
-export default TextField
