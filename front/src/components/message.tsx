@@ -12,6 +12,7 @@ export function Message(props: MessageProps) {
       <h3 className="msg-username">{props.children.username}</h3>
       <p className="msg-content">{props.children.content}</p>
       <p className="msg-date">{props.children.date}</p>
+      {props.children.vu && <p>Vu</p>}
     </div>
   )
 }

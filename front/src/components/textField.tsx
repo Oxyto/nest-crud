@@ -1,9 +1,8 @@
+import "./textField.css"
 import { useState } from "react"
 import { MessageModelRequest } from "./models"
-import socket from "./config"
-import "./textField.css"
+import { socket } from "./config"
 import { decodeTokenCredentials } from "../utils"
-import { v4 } from "uuid"
 
 function sendMessage(message: MessageModelRequest) {
   socket.send("message", message)
@@ -13,9 +12,9 @@ export function TextField() {
   const [msg, setMsg] = useState("")
   const credentials = decodeTokenCredentials()
   const message = {
-    uuid: v4(),
     picture: credentials.picture,
     username: credentials.name,
+    email: credentials.email,
     content: msg,
   }
 

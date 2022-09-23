@@ -1,10 +1,12 @@
 export interface MessageModelRequest {
-  uuid: string
   picture: string
   username: string
+  email: string
   content: string
 }
 
 export interface MessageModel extends MessageModelRequest {
+  uuid: string
   date: string
+  vu: boolean
 }

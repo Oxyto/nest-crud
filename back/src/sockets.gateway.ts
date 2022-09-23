@@ -9,6 +9,8 @@ import { Message } from "./message/message.entity"
 import { db, cache } from "./config/dbconfig"
 import { UseGuards } from "@nestjs/common"
 import { AuthGuard } from "./auth.guard"
+import { v4 } from "uuid"
+import type { CreateMessageDto } from "./message/create-message.dto"
 
 @UseGuards(AuthGuard)
 @WebSocketGateway({ cors: true })
@@ -24,19 +26,32 @@ export class SocketsGateway implements OnGatewayConnection {
     }
   }
 
-  async handleConnection(clientConnection: any, ..._args: unknown[]) {
+  async handleConnection(
+    clientConnection: any,
+    ..._args: unknown[]
+  ): Promise<void> {
     clientConnection.emit("messages", await this.getMessagesList())
   }
 
   @SubscribeMessage("vu")
-  async handleVu(_client: unknown, payload: unknown) {}
+  async handleVu(
+    _client: unknown,
+    payload: [string, [string, string]],
+  ): Promise<void> {
+    const [uuid, email] = payload[1]
+
+    await db("messages")
+      .update("vu", true)
+      .where("uuid", uuid)
+      .whereNot("email", email)
+  }
 
   @SubscribeMessage("message")
   async handleMessage(
     _client: unknown,
-    payload: unknown,
+    payload: [string, CreateMessageDto],
   ): Promise<WsResponse<string>> {
-    const message = new Message(payload[1], new Date())
+    const message = new Message(payload[1], new Date(), v4())
 
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
