@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string("email").notNullable()
     table.string("content").notNullable()
     table.boolean("vu").defaultTo(false)
-    table.date("date")
+    table.timestamp("date")
   })
 }
 
