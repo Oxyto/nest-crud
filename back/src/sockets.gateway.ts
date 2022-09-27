@@ -34,14 +34,12 @@ export class SocketsGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage("vu")
-  async handleVu(_client: any, payload: [string, string]): Promise<void> {
-    const [uuid, email] = payload
+  async handleVu(_client: any, uuid: string): Promise<void> {
 
-    this.broadcast.emit("getVu", uuid)
     await db("messages")
       .update("vu", true)
       .where("uuid", uuid)
-      .whereNot("email", email)
+    this.broadcast.emit("getVu", uuid)
   }
 
   @SubscribeMessage("newMessage")

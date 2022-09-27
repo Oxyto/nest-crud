@@ -10,7 +10,7 @@ function sendVu(message: MessageModel) {
   const uuid = message.uuid
 
   if (message.vu || email === decodeTokenCredentials().email) return
-  socket.emit("vu", [uuid, email])
+  socket.emit("vu", uuid)
 }
 
 function getVu(message: MessageModel, uuid: string) {
