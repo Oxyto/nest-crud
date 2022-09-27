@@ -11,8 +11,10 @@ export function Message(props: MessageProps) {
       <img src={props.children.picture} alt="PP" className="msg-icon" />
       <h3 className="msg-username">{props.children.username}</h3>
       <p className="msg-content">{props.children.content}</p>
-      <p className="msg-date">{props.children.date}</p>
-      {props.children.vu && <p>Vu</p>}
+      <p className="msg-date">
+        {new Date(props.children.date).toLocaleString()}
+      </p>
+      {props.children.vu && <p className="msg-vu">Vu</p>}
     </div>
   )
 }
