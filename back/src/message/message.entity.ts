@@ -7,6 +7,7 @@ export class Message {
   uuid: string
   picture: string
   username: string
+  email: string
   content: string
   vu: boolean
   date: Date
@@ -14,7 +15,9 @@ export class Message {
   constructor(createMessageDto: CreateMessageDto, date: Date, uuid: string) {
     this.picture = createMessageDto.picture
     this.username = createMessageDto.username
+    this.email = createMessageDto.email
     this.content = createMessageDto.content
+    this.vu = false
     this.date = date
     this.uuid = uuid
   }
@@ -24,6 +27,7 @@ export class Message {
       typeof this.uuid === "string" &&
       typeof this.picture === "string" &&
       typeof this.username === "string" &&
+      typeof this.email === "string" &&
       typeof this.content === "string" &&
       typeof this.vu === "boolean" &&
       this.username.length <= USERNAME_LENGTH &&

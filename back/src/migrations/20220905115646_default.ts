@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid("uuid").primary().index()
     table.string("picture").notNullable()
     table.string("username").notNullable()
+    table.string("email").notNullable()
     table.string("content").notNullable()
     table.boolean("vu").defaultTo(false)
     table.date("date")

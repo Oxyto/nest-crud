@@ -9,7 +9,7 @@ import { Message } from "./message/message.entity"
 import { db, cache } from "./config/dbconfig"
 import { UseGuards } from "@nestjs/common"
 import { AuthGuard } from "./auth.guard"
-import { v4 } from "uuid"
+import { v1 } from "uuid"
 import type { CreateMessageDto } from "./message/create-message.dto"
 
 @UseGuards(AuthGuard)
@@ -27,35 +27,33 @@ export class SocketsGateway implements OnGatewayConnection {
   }
 
   async handleConnection(
-    clientConnection: any,
+    client: any,
     ..._args: unknown[]
   ): Promise<void> {
-    clientConnection.emit("messages", await this.getMessagesList())
+    client.emit("loadMessages", await this.getMessagesList())
   }
 
   @SubscribeMessage("vu")
-  async handleVu(
-    _client: unknown,
-    payload: [string, [string, string]],
-  ): Promise<void> {
-    const [uuid, email] = payload[1]
+  async handleVu(_client: any, payload: [string, string]): Promise<void> {
+    const [uuid, email] = payload
 
+    this.broadcast.emit("getVu", uuid)
     await db("messages")
       .update("vu", true)
       .where("uuid", uuid)
       .whereNot("email", email)
   }
 
-  @SubscribeMessage("message")
+  @SubscribeMessage("newMessage")
   async handleMessage(
     _client: unknown,
-    payload: [string, CreateMessageDto],
+    payload: CreateMessageDto,
   ): Promise<WsResponse<string>> {
-    const message = new Message(payload[1], new Date(), v4())
+    const message = new Message(payload, new Date(), v1())
 
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
     await cache.rPush("msgQueue", JSON.stringify(message))
-    this.broadcast.emit("message", message)
+    this.broadcast.emit("loadMessage", message)
   }
 }

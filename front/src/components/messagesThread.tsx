@@ -1,26 +1,36 @@
 import "./messagesThread.css"
 import { Message } from "./message"
 import { useEffect, useState } from "react"
-import { MessageModel } from "./models"
 import { socket } from "./config"
 import { decodeTokenCredentials } from "../utils"
+import type { MessageModel } from "./models"
 
 function sendVu(message: MessageModel) {
-  const email = decodeTokenCredentials().email
+  const email = message.email
   const uuid = message.uuid
 
-  socket.send("vu", [uuid, email])
+  if (message.vu || email === decodeTokenCredentials().email) return
+  socket.emit("vu", [uuid, email])
+}
+
+function getVu(message: MessageModel, uuid: string) {
+  if (!message.vu && message.uuid === uuid)
+    message.vu = true
+  return message
 }
 
 export function MessagesThread() {
   const [messages, setMessages] = useState<MessageModel[]>([])
 
   useEffect(() => {
-    socket.on("messages", (data: MessageModel[]) => {
+    socket.on("getVu", (uuid: string) => {
+      setMessages(messages.map((message) => getVu(message, uuid)))
+    })
+    socket.on("loadMessages", (data: MessageModel[]) => {
       data.forEach(sendVu)
       setMessages(data)
     })
-    socket.on("message", (data: MessageModel) => {
+    socket.on("loadMessage", (data: MessageModel) => {
       sendVu(data)
       setMessages([...messages, data])
     })

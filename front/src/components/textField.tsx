@@ -5,7 +5,7 @@ import { socket } from "./config"
 import { decodeTokenCredentials } from "../utils"
 
 function sendMessage(message: MessageModelRequest) {
-  socket.send("message", message)
+  socket.emit("newMessage", message)
 }
 
 export function TextField() {

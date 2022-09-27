@@ -11,7 +11,7 @@ export const socket = io(`ws://${serverConfig.host}:${serverConfig.port}`, {
   },
 })
 
-socket.on("logout", (context) => {
+socket.on("logout", (context: object) => {
   console.error(context)
   window.localStorage.removeItem("token")
   window.location.reload()
