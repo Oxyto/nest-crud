@@ -1,4 +1,4 @@
-<img src="https://pbs.twimg.com/profile_images/1547158629471686658/4LZ9xIEF_400x400.jpg" alt="img" style="zoom:25%;" />
+<p align="center"><img src="https://sortlist.gumlet.io/sortlist-core-api/qs62htewzi15zesvrglkbqjlygqf?w=150&format=auto" alt="img" width="5%" height="5%" /></p>
 
 <h1 align="center">FaberChat : A fullstack app example</h1>
 
