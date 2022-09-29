@@ -9,6 +9,8 @@ import { Message } from "./message/message.entity"
 import { db, cache } from "./config/dbconfig"
 import { UseGuards } from "@nestjs/common"
 import { AuthGuard } from "./auth.guard"
+import { v1 } from "uuid"
+import type { CreateMessageDto } from "./message/create-message.dto"
 
 @UseGuards(AuthGuard)
 @WebSocketGateway({ cors: true })
@@ -17,24 +19,39 @@ export class SocketsGateway implements OnGatewayConnection {
 
   private async getMessagesList(): Promise<Message[]> {
     try {
-      return await db.select("*").from("messages").orderBy("id", "asc")
+      return await db.select("*").from("messages").orderBy("uuid", "asc")
     } catch (error) {
       console.error(error)
       return []
     }
   }
 
-  async handleConnection(clientConnection: any, ..._args: any[]) {
-    clientConnection.emit("messages", await this.getMessagesList())
+  async handleConnection(
+    client: any,
+    ..._args: unknown[]
+  ): Promise<void> {
+    client.emit("loadMessages", await this.getMessagesList())
   }
 
-  @SubscribeMessage("message")
-  async handleMessage(_client: any, payload: any): Promise<WsResponse<string>> {
-    const message = new Message(payload[1], new Date())
+  @SubscribeMessage("vu")
+  async handleVu(_client: any, uuid: string): Promise<void> {
+
+    await db("messages")
+      .update("vu", true)
+      .where("uuid", uuid)
+    this.broadcast.emit("getVu", uuid)
+  }
+
+  @SubscribeMessage("newMessage")
+  async handleMessage(
+    _client: unknown,
+    payload: CreateMessageDto,
+  ): Promise<WsResponse<string>> {
+    const message = new Message(payload, new Date(), v1())
 
     if (!message.check())
       return { event: "error", data: "Invalid message body" }
     await cache.rPush("msgQueue", JSON.stringify(message))
-    this.broadcast.emit("message", message)
+    this.broadcast.emit("loadMessage", message)
   }
 }

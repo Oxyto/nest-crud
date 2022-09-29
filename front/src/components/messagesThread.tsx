@@ -1,24 +1,49 @@
 import "./messagesThread.css"
-import Message from "./message"
+import { Message } from "./message"
 import { useEffect, useState } from "react"
-import { MessageModel } from "./models"
-import socket from "./config"
+import { socket } from "./config"
+import { decodeTokenCredentials } from "../utils"
+import type { MessageModel } from "./models"
 
-function MessagesThread() {
-  const [messages, setMessages] = useState([] as MessageModel[])
+function sendVu(message: MessageModel) {
+  const email = message.email
+  const uuid = message.uuid
+
+  if (message.vu || email === decodeTokenCredentials().email) return
+  socket.emit("vu", uuid)
+}
+
+function getVu(message: MessageModel, uuid: string) {
+  if (!message.vu && message.uuid === uuid)
+    message.vu = true
+  return message
+}
+
+export function MessagesThread() {
+  const [messages, setMessages] = useState<MessageModel[]>([])
 
   useEffect(() => {
-    socket.on("messages", (data) => setMessages(data))
-    socket.on("message", (data) => setMessages([...messages, data]))
+    socket.on("getVu", (uuid: string) => {
+      setMessages(messages.map((message) => getVu(message, uuid)))
+    })
+    socket.on("loadMessages", (data: MessageModel[]) => {
+      data.forEach(sendVu)
+      setMessages(data)
+    })
+    socket.on("loadMessage", (data: MessageModel) => {
+      sendVu(data)
+      setMessages([...messages, data])
+    })
   }, [messages])
   return (
     <div className="msg-thead">
-      <p>{messages.length ? "" : "Loading messages..."}</p>
-      {messages.map((msg) => (
-        <Message key={msg.date as string}>{msg}</Message>
-      ))}
+      {messages.length === 0 ? (
+        <p>Loading messages...</p>
+      ) : (
+        messages.map((message) => (
+          <Message key={message.date}>{message}</Message>
+        ))
+      )}
     </div>
   )
 }
-
-export default MessagesThread

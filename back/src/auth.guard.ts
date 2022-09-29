@@ -8,8 +8,9 @@ dotenv.config()
 export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const wsClient = context.switchToWs().getClient()
-    const token = wsClient.request.headers.authorization || ""
+    const token = wsClient.request.headers.authorization
     const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
     try {
       await client.verifyIdToken({
         idToken: token,
