@@ -21,6 +21,7 @@ export function TextField() {
   return (
     <div className="text-field">
       <input
+        autoFocus={true}
         value={msg}
         onChange={(event) => setMsg(event.target.value)}
         onKeyDown={(event) => {
