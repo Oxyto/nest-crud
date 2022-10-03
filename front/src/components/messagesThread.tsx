@@ -38,7 +38,6 @@ export function MessagesThread() {
       0,
       messagesThreadRef.current?.scrollHeight,
     )
-    console.log(messagesThreadRef)
   }, [messages])
   return (
     <div className="msg-thread" ref={messagesThreadRef}>
