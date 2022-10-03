@@ -26,19 +26,13 @@ export class SocketsGateway implements OnGatewayConnection {
     }
   }
 
-  async handleConnection(
-    client: any,
-    ..._args: unknown[]
-  ): Promise<void> {
+  async handleConnection(client: any, ..._args: unknown[]): Promise<void> {
     client.emit("loadMessages", await this.getMessagesList())
   }
 
   @SubscribeMessage("vu")
   async handleVu(_client: any, uuid: string): Promise<void> {
-
-    await db("messages")
-      .update("vu", true)
-      .where("uuid", uuid)
+    await db("messages").update("vu", true).where("uuid", uuid)
     this.broadcast.emit("getVu", uuid)
   }
 

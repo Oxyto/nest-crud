@@ -1,6 +1,6 @@
 import "./messagesThread.css"
 import { Message } from "./message"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { socket } from "./config"
 import { decodeTokenCredentials } from "../utils"
 import type { MessageModel } from "./models"
@@ -14,13 +14,13 @@ function sendVu(message: MessageModel) {
 }
 
 function getVu(message: MessageModel, uuid: string) {
-  if (!message.vu && message.uuid === uuid)
-    message.vu = true
+  if (!message.vu && message.uuid === uuid) message.vu = true
   return message
 }
 
 export function MessagesThread() {
   const [messages, setMessages] = useState<MessageModel[]>([])
+  const messagesThreadRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     socket.on("getVu", (uuid: string) => {
@@ -34,9 +34,13 @@ export function MessagesThread() {
       sendVu(data)
       setMessages([...messages, data])
     })
+    messagesThreadRef.current?.scrollTo(
+      0,
+      messagesThreadRef.current?.scrollHeight,
+    )
   }, [messages])
   return (
-    <div className="msg-thead">
+    <div className="msg-thread" ref={messagesThreadRef}>
       {messages.length === 0 ? (
         <p>Loading messages...</p>
       ) : (
