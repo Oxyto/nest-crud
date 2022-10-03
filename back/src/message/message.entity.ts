@@ -1,7 +1,7 @@
 import { CreateMessageDto } from "./create-message.dto"
 
 const USERNAME_LENGTH = 64
-const CONTENT_LENGTH = 512
+const CONTENT_LENGTH = 3000
 
 export class Message {
   uuid: string
