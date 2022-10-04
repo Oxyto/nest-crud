@@ -1,6 +1,7 @@
 .msg-thread {
   margin-left: 20%;
   margin-right: 20%;
+  text-indent: 1em;
   height: 60vh;
   overflow-y: auto;
   scrollbar-width: none;
